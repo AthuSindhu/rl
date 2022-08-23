@@ -1,0 +1,43 @@
+{% extends 'Admin/adminindex.html' %}
+{% block body %}
+
+<body>
+<form id="form1" name="form1" method="post" action="/view_student_post">
+  <table class="table table-hover">
+    <tr>
+      <td>
+        <select name="cid">{%  for i in course %}
+        <option value="{{ i['course_id'] }}"> {{i['course_name']}}</option>
+        {% endfor %}
+        </select></td>
+      <td><input type="submit" value="go"/></td>
+    </tr>
+  </table>
+  <table class="table table-hover">
+    <tr>
+      <td>SL NO</td>
+      <td> NAME</td>
+      <td>COURSE NAME</td>
+      <td>SEMESTER</td>
+      <td>ADMISSION NUMBER</td>
+      <td>DOB</td>
+      <td>EMAIL</td>
+      <td>PHONE NUMBER</td>
+      <td>&nbsp;</td>
+    </tr>
+    {% for i in data %}
+    <tr>
+      <td>&nbsp;{{loop.index}}</td>
+      <td>&nbsp;{{i["s_name"]}}</td>
+      <td>&nbsp;{{i["course_name"]}}</td>
+      <td>&nbsp;{{i["Semester"]}}</td>
+      <td>&nbsp;{{i["Adm_no"]}}</td>
+      <td>&nbsp;{{i["s_dob"]}}</td>
+      <td>&nbsp;{{i["s_email"]}}</td>
+      <td>&nbsp;{{i["s_phone"]}}</td>
+      <td><a href="/delete_student/{{i['lid']}}">delete</a></td>
+    </tr>
+    {% endfor %}
+  </table>
+</form>
+{% endblock %}

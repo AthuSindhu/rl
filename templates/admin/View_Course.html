@@ -1,0 +1,33 @@
+{% extends 'Admin/adminindex.html' %}
+{% block body %}
+
+<body>
+<form id="form1" name="form1" method="post" action="/View_course_search">
+  <table class="table table-hover">
+    <tr>
+      <td><select name="select" id="select">
+        {%  for i in data %}
+        <option value="{{ i['Dept_id'] }}"> {{i['Dept_name']}}</option>
+        {% endfor %}
+      </select></td>
+      <td><input type="submit" value="go"/></td>
+    </tr>
+  </table>
+  <table class="table table-hover">
+    <tr>
+      <td>SL NO</td>
+      <td>COURSE NAME</td>
+      <td>DEPARTMENT NAME</td>
+      <td>&nbsp;</td>
+    </tr>
+    {% for i in data %}
+    <tr>
+      <td>&nbsp;{{loop.index}}</td>
+      <td>&nbsp;{{i["course_name"]}}</td>
+      <td>&nbsp;{{i["Dept_name"]}}</td>
+      <td><a href="/delete_course/{{i['Course_id']}}">delete</a></td>
+    </tr>
+    {% endfor %}
+  </table>
+</form>
+{% endblock %}

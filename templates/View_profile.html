@@ -1,0 +1,37 @@
+{% extends 'studindex.html' %}
+{% block body %}
+
+<body>
+<form id="form1" name="form1" method="post" action="">
+  <table class="table table-hover">
+    <tr>
+      <td>Name</td>
+      <td>&nbsp;{{data["s_name"]}}</td>
+    </tr>
+    <tr>
+      <td>Course</td>
+      <td>&nbsp;{{data["course_name"]}}</td>
+    </tr>
+    <tr>
+      <td>Semester</td>
+      <td>&nbsp;{{data["Semester"]}}</td>
+    </tr>
+    <tr>
+      <td>Admission No</td>
+      <td>&nbsp;{{data["Adm_no"]}}</td>
+    </tr>
+    <tr>
+      <td>Email</td>
+      <td>&nbsp;{{data["s_email"]}}</td>
+    </tr>
+    <tr>
+      <td>Phone</td>
+      <td>&nbsp;{{data["s_phone"]}}</td>
+    </tr>
+    <tr>
+      <td>DOB</td>
+      <td>&nbsp;{{data["s_dob"]}}</td>
+    </tr>
+  </table>
+</form>
+{% endblock  %}

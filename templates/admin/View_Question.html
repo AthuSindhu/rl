@@ -1,0 +1,59 @@
+{% extends 'Admin/adminindex.html' %}
+{% block body %}
+<style>
+  /* zebra striping */
+
+  tbody tr:nth-child(odd) {
+    background-color: #e7bcdc;
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: #e8b7e8;
+  }
+
+  tbody tr {
+    background-image: url(noise.png);
+  }
+
+  table {
+    background-color: #c43ea3;
+    color: black;
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid rgb(83, 97, 226);
+  }
+</style>
+<form id="form1" name="form1" method="post" action="">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <td>SL NO</td>
+        <td>QUESTION</td>
+        <td>OPTION A</td>
+        <td>OPTION B</td>
+        <td>OPTION C</td>
+        <td>OPTION D</td>
+        <td>CORRECT ANSWER</td>
+        <td>DIFFICULTY LEVEL</td>
+        <td>&nbsp;</td>
+      </tr>
+    </thead>
+    {% for i in data %}
+    <tbody>
+      <tr>
+        <td>&nbsp;{{loop.index}}</td>
+        <td>&nbsp;{{i["Question"]}}</td>
+        <td>&nbsp;{{i["Option1"]}}</td>
+        <td>&nbsp;{{i["Option2"]}}</td>
+        <td>&nbsp;{{i["Option3"]}}</td>
+        <td>&nbsp;{{i["Option4"]}}</td>
+        <td>&nbsp;{{i["Answer"]}}</td>
+        <td>&nbsp;{{i["Difficulty_level"]}}</td>
+        <td><a href="/delete_questions/{{i['Q_id']}}" class="btn btn-danger">delete</a></td>
+      </tr>
+    </tbody>
+    {% endfor %}
+  </table>
+</form>
+{% endblock %}

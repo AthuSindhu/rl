@@ -1,0 +1,48 @@
+{% extends 'admin/adminindex.html' %}
+{% block body %}
+<body>
+<form id="form1" name="form1" method="post" action="/Add_Question_post">
+  <!--<h1>Prediction Result:{{res}}</h1>-->
+  <table  border="1" class="table table-hover">
+    <tr>
+      <td>QUESTION</td>
+      <td><input type="text" name="textfield" id="textfield" /></td>
+    </tr>
+    <tr>
+      <td>OPTION A</td>
+      <td><input type="text" name="textfield6" id="textfield6" /></td>
+    </tr>
+    <tr>
+      <td>OPTION B</td>
+      <td><input type="text" name="textfield2" id="textfield2" /></td>
+    </tr>
+    <tr>
+      <td>OPTION C</td>
+      <td><input type="text" name="textfield3" id="textfield3" /></td>
+    </tr>
+    <tr>
+      <td>OPTION D</td>
+      <td><input type="text" name="textfield4" id="textfield4" /></td>
+    </tr>
+    <tr>
+      <td>CORRECT ANSWER</td>
+      <td><input type="text" name="textfield5" id="textfield5" /></td>
+    </tr>
+     <tr>
+      <td>LEVEL</td>
+      <td><select name="level">
+        <option value="Knowledge">Knowledge</option>
+        <option value="Comprehension">Comprehension</option>
+        <option value="Application">Application</option>
+        <option value="Analysis">Analysis</option>
+        <option value="Article">Article</option>
+        <option value="Synthesis">Synthesis</option>
+        <option value="Evaluation">Evaluation</option>
+      </select></td>
+    </tr>
+    <tr>
+      <td align="center" colspan="2"><input type="submit" name="button" id="button" value="Add" class="btn btn-primary"/></td>
+    </tr>
+  </table>
+</form>
+{% endblock %}

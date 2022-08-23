@@ -1,0 +1,48 @@
+{% extends 'admin/adminindex.html' %}
+{% block body %}
+
+<body>
+<form id="form1" name="form1" method="post" action="/Add_Student_post">
+  <table class="table table-hover">
+    <tr>
+      <td>NAME</td>
+      <td><input type="text" name="st_name" id="textfield" /></td>
+    </tr>
+    <tr>
+      <td>COURSE</td>
+      <td><select name="st_course" id="select">
+        {%  for i in data %}
+        <option value="{{i['course_id']}}">{{i['course_name']}}</option>
+        {% endfor %}
+      </select></td>
+    </tr>
+    <tr>
+      <td>SEMESTER</td>
+      <td><select name="st_semester" id="select2">
+        {%  for i in range(1,9) %}
+        <option> {{i}}</option>
+        {% endfor %}
+      </select></td>
+    </tr>
+    <tr>
+      <td>ADM_NO</td>
+      <td><input type="text" name="st_admno" id="textfield2" /></td>
+    </tr>
+    <tr>
+      <td>DOB</td>
+      <td><input type="text" name="st_dob" id="textfield3" /></td>
+    </tr>
+    <tr>
+      <td>EMAIL</td>
+      <td><input type="text" name="st_email" id="textfield4" /></td>
+    </tr>
+    <tr>
+      <td>PHONE NUMBER</td>
+      <td><input type="text" name="st_phno" id="textfield5" /></td>
+    </tr>
+    <tr>
+      <td align="center" colspan="2"><input type="submit" name="button" id="button" value="Add" /></td>
+    </tr>
+  </table>
+</form>
+{% endblock%}

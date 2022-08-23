@@ -1,0 +1,557 @@
+{% extends 'studindex.html' %}
+{% block body %}
+<style>
+  .right{
+    background-color:bisque;
+    width: auto;
+    display: inline-block;
+    /* /float: right; */
+    vertical-align: top;
+    width: auto;
+    padding: 1rem;
+    display: flex;
+    margin-left: 40px;
+    margin-right: 90px;
+    margin-bottom: 50px;
+  }
+  /* table{
+    table-layout: fixed;
+    width: 100%;
+  } */
+td{
+  padding: 5px 20px;
+}
+</style>
+<style>
+        body{
+            padding: 0;
+            margin: 0;
+            font-family: Century Gothic;
+        }
+        .deschead{
+            border: 1px solid black;
+            background-color: bisque;
+            margin: 0px 190px;
+        }
+        .deschead h1{
+            text-align: center;
+        }
+        .desctext{
+            margin-top: 50px;
+            margin-left: 10%;
+        }
+        ul li{
+            padding-top: 10px;
+        }
+        button{
+            border-radius: 20px;
+            padding: 5px 20px;
+            font-weight: bolder;
+            letter-spacing: 2px;
+            border: 1px solid black;
+            background: transparent;
+            cursor: pointer;
+            align-items: center;
+        }
+        .start{
+            /* padding-left: 50%; */
+            padding: 60px 0px 60px 50%;
+        }
+        
+    </style>
+
+<body> 
+<input type="hidden" value="{{ulid}}" id="lid"/>
+<!--<div class="deschead" >
+  <div class="desctitle">
+      <h1><b>INSTRUCTIONS</b></h1>
+  </div>
+  <hr>
+  <div class="desctext">
+      <ul>
+          <li><p>There are 7 levels.</p></li>
+          <li><p>There are 10 qurestions in each level.</p></li>
+          <li><p>Passmarks are different in each level.</p></li>
+          <li><p>The reward will increase if the answer is correct otherwise it will resuce.</p></li>
+          <li><p>If the user beats the passmark then user will be eligible, otherwise not eligible.</p></li>
+      </ul>
+  </div>
+  <div class="start">
+      <button type="submit">START</button>
+  </div>
+</div>-->
+<table class="right" style="margin-bottom:100px;float: right;" border="1px" width="100%">
+    <tr>
+     <td colspan="2"><b>LEADERBOARD</b><h3 id="leaderboard"></h3></td>
+    </tr>
+    <tr>
+      <td><b>Max Score</b></td>
+      <td><b> User</b></td>
+    </tr>
+    <tr>
+      <td><h3 id="max"></h3></td>
+      <td><h3 id="user"></h3></td>
+    </tr>
+    </table>
+<table border="1px" style="background-color: rgb(171, 211, 227);font-weight: bolder;font-family: Century Gothic;">
+  <tr style="padding: 5px 20px;text-align: center;">
+    <td style="padding: 5px 20px;text-align: center;">Total Questions<h4 id="total_quest"></h4></td>
+    <td style="padding: 1px 20px;text-align: center;">Mark<h4 id="mark"></h4></td>
+    <td style="padding: 5px 20px;text-align: center;">Pass mark<h4 id="passmark"></h4></td>
+    <td style="padding: 5px 20px;text-align: center;"> Rewards<h4 id="rewards"></h4></td>
+    <!-- <td> Current Mark<h4 id="currentMark"></h4></td> -->
+    <!-- <td style="padding: 5px 20px;text-align: center;">Current QUES<h4 id="current_quest"></h4></td>  -->
+    <td style="padding: 5px 20px;text-align: center;">No of chance:<h4 id="chance"></h4></td>
+  </tr>
+  <tr>
+  </tr>
+</table>
+<div>
+  <p><h3 id="quetionId"></h3></p>
+    <tr>
+      <td><input type="button" enabled="false" name="button" id="btknowedge" value="Knowledge" /></td>
+    </tr>
+    <tr>
+      <td><input type="button" name="button2" id="btComprehension" value="Comprehension" /></td>
+    </tr>
+    <tr>
+      <td><input type="button" name="button3" id="btApplication" value="Application" /></td>
+    </tr>
+    <tr>
+      <td><input type="button" name="button4" id="btAnalysis" value="Analysis" /></td>
+    </tr>
+    <tr>
+      <td><input type="button" name="button5" id="bArticle" value="Article" /></td>
+    </tr>
+    <tr>
+      <td><input type="button" name="button6" id="btSynthesis" value="Synthesis" /></td>
+    </tr>
+    <tr>
+      <td><input type="button" name="button7" id="btEvaluation" value="Evaluation" /></td>
+    </tr>
+  </div>
+ <h1 id="qnno" style="color:aliceblue;font-size: larger;"></h1>
+<!-- <h1 id="reputation"></h1>
+  <h1 id="virus"></h1> -->
+<table id="tbexam">
+</table>
+<br>
+<input type="button" id="save" value="Save"/>
+<input type="button" id="next" value="Next"/>
+<input type="submit" id="finish" value="Finish"/>
+</body>
+</html>
+<script src="/static/jquery.js"></script>
+<script>
+  var value
+  var db_Data;
+  var question_count=0;
+   var pos=0;
+  var reputation=0;
+  var virus=0;
+  var data_length=0;
+  var level=0;
+  var mark=0;
+  var chance=3;
+  var reward=0;
+  var answer="";
+  var correctAns=0;
+  $(document).ready(function(){
+    //$(".deschead").toggle();
+    $("#finish").hide()
+    $("#back").hide()
+    $("#next").hide()
+    $("#save").hide()
+    $("#btknowedge").hide();
+    $("#btComprehension").hide()
+    $("#btApplication").hide()
+    $("#btAnalysis").hide()
+    $("#bArticle").hide()
+    $("#btSynthesis").hide()
+    $("#btEvaluation").hide()
+    $("#back").show()
+    levelPost();
+  });
+  // function normalMessage(message) 
+  // swal({
+  //   text:message,
+  //   icon:"success",
+  //   button:  "Ok"
+  // });
+
+
+          
+  function exam(db_Data) {
+    data_length=db_Data.length;
+    $("#total_quest").html(data_length)
+    $("#current_quest").html(question_count)
+    $("#reputation").html("rep"+reputation)
+    $("#virus").html("vir"+virus)
+    quest=db_Data[pos]["Question"]
+    answer=db_Data[pos]["Answer"]
+    op1=db_Data[pos]["Option1"]
+    op2=db_Data[pos]["Option2"]
+    op3=db_Data[pos]["Option3"]
+    op4=db_Data[pos]["Option4"]
+    $("#tbexam").text("")
+    var qno= pos+1;
+    $("#tbexam").append("<tr><td>Question "+qno+"</td><td><b>"+quest+"</b></td></tr><tr><td>Op1</td><td><input type='radio' name='options' id='options' value='a'>"+op1+"</td></tr><tr><td>Op2</td><td><input type='radio' name='options' id='options'value='b'>"+op2+"</td></tr><tr><td>Op3</td><td><input type='radio'name='options' id='options' value='c'>"+op3+"</td></tr><tr><td>Op4</td><td><input type='radio' name='options' id='options' value='d'>"+op4+"</td></tr>")
+  }
+  $("#next").click(function(){
+      pos=pos+1;
+      exam(db_Data)
+      var message = data_length-pos;
+      normalMessage(message+" remaining question!!");
+      $("#next").hide();
+  });
+  $("#save").click( function(){
+    $("#save").hide()
+    var cv = $("input[name='options']:checked").val();
+    console.log(data_length);
+    if(answer===cv)
+    {
+      correctAns= correctAns+1;
+      $("#mark").html(correctAns);
+      rewardCalculate(level,true);
+      reputation = reputation+1;
+      if(question_count==data_length){
+        $("#finish").show()
+        $("#next").hide()
+      }
+      else
+      {
+        pos=pos+1;
+        exam(db_Data)
+        //$("#next").show();
+        $("#save").hide();
+      }
+      //showMessage("Correct Answer",true);
+    }
+    else if(cv!=='')
+    {
+       pos=pos+1;
+       exam(db_Data)
+      //$("#next").show();
+      //showMessage("Wrong Answer",false);
+      rewardCalculate(level,false);
+      reputation = reputation-1;
+    }
+    else{
+      showMessage("Please choose an option",false);
+    }
+    $("#rewards").html(reward)
+  });
+  $(document).on('change',"#options",function () {
+    question_count=question_count+1
+    $("#save").show();
+    if(question_count==data_length){
+      $("#finish").show()
+      $("#next").hide()
+    }
+    var cv = $(this).val()
+    /*if (answer==cv)
+    {
+      reputation=reputation+1
+      virus=parseInt(virus)-1
+      $("#reputation").html("rep"+reputation)
+      $("#virus").html("vir"+virus)
+      pos=pos+1;
+      exam(db_Data)
+    }
+    else {
+      reputation=reputation-1
+      virus=parseInt(virus)+1
+      $("#reputation").html("rep :"+reputation)
+      $("#virus").html("vir :"+virus)
+      pos=pos+1;
+      exam(db_Data)
+    }*/
+  });
+
+  $("#finish").click(function () {
+    $("#back").show()
+    hideAll();
+    uid=$("#lid").val()
+    console.log(reputation);
+    if(reputation>=parseInt($("#passmark").html())){
+      console.log(level); 
+      markCalculate(data_length,level);
+      datainsert(uid,reputation,level,'eligible',true);
+      successMessage(level==7?'All': level)
+      clearVariables();
+      if(level==7) {
+        window.Location='/Home'
+      }
+    }else{
+      datainsert(uid,reputation,level,'fail',false);
+      failureMessage()
+    }
+  });
+
+  function markCalculate(data_length,level){
+    switch(level)
+    {
+      case 1:{
+        mark=(data_length*50)/100
+        break;
+      }
+      case 2:{
+        mark=(data_length*60)/100
+        break;
+      }
+      case 3:{
+        mark=(data_length*60)/100
+        break;
+      }
+      case 4:{
+        mark=(data_length*70)/100
+        break;
+      }
+      case 5:{
+        mark=(data_length*80)/100
+        break;
+      }
+      case 6:{
+        mark=(data_length*80)/100
+        break;
+      }
+      case 7:{
+        mark=(data_length*90)/100
+        break;
+      }
+      default:{
+        //notEligible()
+        //window.location='/Home';
+      }
+    }
+    $("#mark").html(mark);
+  }
+
+  function rewardCalculate(level, isSucces){
+    debugger
+    console.log(reward)
+    switch(level)
+    {
+      case 1:{
+        //reward=0;
+        reward = (isSucces?reward+1: reward-1);
+        break;
+      }
+      case 2:{
+        reward= (isSucces?reward+2: reward-2);
+        break;
+      }
+      case 3:{
+        reward=  (isSucces?reward+3: reward-3)
+        break;
+      }
+      case 4:{
+        reward = (isSucces? reward+4: reward-4)
+        break;
+      }
+      case 5:{
+        reward= (isSucces?reward+5: reward-5)
+        break;
+      }
+      case 6:{
+        reward= (isSucces?reward+6: reward-6)
+        break;
+      }
+      case 7:{
+        reward= (isSucces?reward+7: reward-7)
+        break;
+      }
+      default:{
+        if(mark<0) {
+          mark=0;
+          reward=0;
+        }
+      }
+    }
+    if(reward<1)
+       reward=0;
+  }
+function clearVariables(){ 
+  question_count=0;
+  pos=0;
+  reputation=0;
+  virus=0;
+  data_length=0;
+  mark=0;
+}
+function hideAll(){
+  $("#btknowedge").hide()
+  $("#btComprehension").hide()
+  $("#btApplication").hide()
+  $("#btAnalysis").hide()
+  $("#bArticle").hide()
+  $("#btSynthesis").hide()
+  $("#btEvaluation").hide()
+  $("#tbexam").text("")
+  $("#reputation").html("")
+  $("#virus").html("")
+  $("#total_quest").html("")
+  $("#current_quest").html("")
+  $("#finish").hide()
+  $("#qnno").hide()
+} 
+function normalMessage(message)
+{
+  swal({
+    text:message,
+    icon:"success",
+    button: "Ok"
+  });
+}
+function showMessage(message,isSucces){
+  swal({
+    title: isSucces?"Correct!": "Error",
+    text: message,
+    icon: isSucces? "success" : "error",
+    button: "OK"
+  });
+} 
+function successMessage(level){
+  
+  var wrongAns= data_length-correctAns
+  swal({
+        title: "Good job!",
+        text: "Eligible from  Level "+level +"\n Total Rewards:"+ reward + "\n Total Marks :"+reputation+ "\n Correct Answers:"+correctAns+"\n Wrong Answers:"+wrongAns,
+        icon: "success",
+        button: "OK",
+  });
+}
+function failureMessage(){
+  notEligible()
+  var wrongAns= data_length-correctAns
+  var preMsg =""
+  if(chance===0 && level>1)
+   preMsg = "\n You must go to the pervious level";
+  swal({
+      title: "Oops...",
+      text: "Not Eligible from  Level "+level +"\n Total Rewards:"+ reward +"\n Total Marks :"+correctAns+ "\n Correct Answers:"+correctAns+"\n Wrong Answers:"+wrongAns+"\n Remaning Chances:"+chance+preMsg,
+      icon: "error",
+      button: "OK",
+    }).then(()=>{
+      window.location.reload();
+     
+  });
+}     
+function notEligible() {
+  $("#btknowedge").hide()
+  $("#btComprehension").hide()
+  $("#btApplication").hide()
+  $("#btAnalysis").hide()
+  $("#bArticle").hide()
+  $("#btSynthesis").hide()
+  $("#btEvaluation").hide()
+  $("#tbexam").text("")
+  $("#reputation").html("")
+  $("#virus").html("")
+  $("#total_quest").html("")
+  $("#current_quest").html("")
+  $("#finish").hide()
+  $("#qnno").hide()
+  $("#mark").html("0")
+}
+
+  function datainsert(lid,mark,level,sts,isSucces) {
+    --chance;
+    currentLevel=level;
+    debugger;
+    if(!isSucces && chance==0 && currentLevel>1){
+      //rewardCalculate(currentLevel, false)
+      currentLevel = currentLevel-1;
+     
+    }
+    if(isSucces){
+      chance=3
+      //rewardCalculate(currentLevel, true)
+      currentLevel = currentLevel+1
+      if(level>6){
+      level=0      
+    }
+      
+    }
+    
+    $.ajax({
+      url: "/scrore_insert" ,
+      type: "POST",
+      data: {ulid:lid,
+            mark:mark,
+            level:currentLevel,
+            status:sts,
+            current_chances:chance===0?3:chance,
+            rewards:reward
+          },
+
+      success: function (data) {
+        console.log(data);
+        levelPost();
+      },
+      error: function (ts) {
+        console.log(ts)
+      }
+    });
+  }
+  function leaderBoad(l){
+    debugger
+    $.ajax({
+        url: "/LeaderBoard/l",
+        type: "GET",
+        success: function(data){
+            console.log(data)
+            debugger;
+            for(var i=0;i<data.data.length; i++){
+                $("#leaderTable").append("<tr><td>"+data.data[i].mark+"</td><td>"+data.data[i].s_name+"</td></tr>")
+            }
+        }
+    });
+  }
+
+  function levelPost(){
+    $.ajax({
+            url: "/Levels_post" ,
+            type: "POST",
+
+            success: function (data){ 
+                db_Data=data["data"]
+                virus=db_Data.length;
+                level = data["currentLevel"]
+                // leaderboard(level);
+                reward = data["rewards"]
+                markCalculate(db_Data.length,level)
+                $("#passmark").html(mark)
+                $("#mark").html("0")
+                $("#max").html(data["maxmark"])
+                $("#currentMark").html(data["currentMark"])
+                $("#rewards").html(reward)
+                $("#user").html(data["uname"])
+                chance = data["current_chances"];
+                $("#chance").html(chance)
+                levelName = "Level "+level+ ":"+data["levelName"]
+                $("#quetionId").html(levelName)
+                leaderBoad(level);
+                exam(db_Data)
+                correctAns=0;
+                debugger
+                if(data["isNewUser"]===1){
+                var message= "1.There are 7 levels.\n2.Passmarks are different in each level.\n3.The reward will increase if the answer is correct otherwise it will reduce.\n4.If the user beats the passmark then user will be eligible, otherwise not eligible.\n5.User will get three chances in case of not eligiblity. \n6.If you losses three chances then back to previous level."
+                swal({
+                      title: "Instructions",
+                      icon: "info",
+                      text: message,
+                      button: "START",
+                    });
+                }
+            },
+            error: function (ts) {
+              console.log(ts);
+            }
+    });
+  }
+
+</script>
+
+
+{% endblock %}

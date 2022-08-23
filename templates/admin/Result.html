@@ -1,0 +1,32 @@
+{% extends 'admin/adminindex.html' %}
+{% block body %}
+<style>
+    img {
+        width: 30px;
+    }
+</style>
+<div class="container">
+    <div class="row">
+        {% for i in data %}
+        <div class="col-md-4" style="border-style: ridge;">
+            <p>Level:{{i["level"]}}</p><br>
+            <p>mark :{{i["mark"]}}</p><br>
+            <p>Eligibilty :{{i["status_level"]}}</p><br>
+            <p>Rewards :{{i["rewards"]}}</p><br>
+            <!-- <input id="value_{{i.rewards}}" type="hidden" onchange="updateStars('{{i.rewards}}')" /> --> 
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+<!-- <script type="text/javascript">
+    function updateStars(id) {    
+        var rating = document.getElementById("value_" + id).value;
+        $.ajax({
+            url: '/dashboard',
+            type: 'POST',
+            data: { 'id': '{{data.rewards}}', 'rating': rating }
+        })
+        };
+</script> -->
+{% endblock %}
